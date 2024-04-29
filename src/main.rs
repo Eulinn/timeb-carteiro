@@ -1,4 +1,13 @@
-use jogo::Jogo;
+
+mod components {
+    pub mod jogo;
+    mod carteiro;
+    mod caixa;
+
+}
+
+
+use components::jogo::Jogo;
 
 //  JOGO DA ENTREGA
 //
@@ -9,13 +18,15 @@ use jogo::Jogo;
 //   - Apliquem a ideia de Encapsulamento
 //   - O código tera uma mapa de exemplo para o teste enquanto estiver em desenvolvimento
 //   - No dia da apresentação o código será posto em prática com um código diferente 
-mod carteiro;
-mod caixa;
-mod jogo;
- 
-fn main() {
-    let matriz: [[char; 20]; 20];
 
-    let jogo: Jogo;
-    jogo.cria_ jogo();
+
+fn main() {
+    let _matriz: [[char; 20]; 20];
+
+    let jogo: Jogo = Jogo::new();
+
+    jogo.cria_jogo(); // aqui vou botar o mapa como parâmetro
+
+    jogo.joga();
+
 }
