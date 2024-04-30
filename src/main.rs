@@ -87,7 +87,9 @@ fn main() {
    let mapa:Vec<Vec<char>> = receber_mapa();
 
 
-    println!("{:?}",mapa);
+    println!("{:?}",mapa); //Meramente ilustrativo
+
+    
 
 
     // let jogo: Jogo = Jogo::new();
