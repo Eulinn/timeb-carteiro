@@ -28,8 +28,6 @@ use std::process;
 
 
 fn receber_mapa() -> Vec<Vec<char>> {
-
-
     //to obetendo o diretorio do projeto, e achando o mapa.txt
     let diretorio_atual = std::env::current_dir().expect("Não foi possível obtero do dir atual");
     let diretorio_atual = diretorio_atual.to_str().expect("Dificuldade em tranformar em string");
@@ -58,15 +56,11 @@ fn receber_mapa() -> Vec<Vec<char>> {
         }
 
     }
-
     /*
         OBS: 
         * Atualizar o mapa.txt muda o mapa do jogo, é só rodar de novo que já atualiza no código;
         * O arquivo deve estar na pasta src junto com nosso main.rs
      */
-    
-
-
     return matriz;
 }
 
