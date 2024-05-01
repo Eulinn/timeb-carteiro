@@ -21,7 +21,7 @@ impl Jogo {
 
     pub fn joga(&self) {
 
-        //Lógica escolhida para jogar
+        //Lógica escolhida para jogar após as posições e status forem modificadas
     }
 
     fn cria_jogo(&self, mapa: &Vec<Vec<char>>) {

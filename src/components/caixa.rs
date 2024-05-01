@@ -1,7 +1,7 @@
 enum Status{
-    Menu,
-    ComCarteiro,
-    SemCarteiro
+    Menu, //Significa que não foi identificado ainda a posição da caixa no mapa, então [0][0] é a posição nula definida
+    ComCarteiro, // Siginifica que a posição da caixa é a mesma do carteiro, mas não será mostrada no mapa
+    SemCarteiro // Siginifica que ela tem uma posição no mapa, mas NÃO é a mesma que a do carteiro
 }
 
 pub struct Caixa{

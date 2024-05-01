@@ -1,8 +1,8 @@
 enum Status{
-    Menu,
-    JogandoSemCaixa,
-    JogandoComCaixa,
-    Fim
+    Menu, //Significa que não foi identificado ainda a posição do carteiro no mapa, então [0][0] é a posição nula definida
+    JogandoSemCaixa, //Significa que a posição de interesse para o carteiro é a mesma da Caixa.
+    JogandoComCaixa, //Significa que a posição de interesse para o carteiro é a do X
+    Fim //Significa que o carteiro chegou na mesma posição que o X e o jogo finaliza quando esse status for obtido.
 }
 
 pub struct Carteiro{
