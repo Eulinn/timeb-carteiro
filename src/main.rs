@@ -22,23 +22,23 @@ use std::process;
 
 fn receber_mapa() -> Vec<Vec<char>> {
     //to obetendo o diretorio do projeto, e achando o mapa.txt
-    let diretorio_atual =
-        std::env::current_dir().expect("Não foi possível obter o diretório atual.");
-    let diretorio_atual = diretorio_atual
-        .to_str()
-        .expect("Dificuldade em tranformar em string seu diretório.");
-
-    let diretorio_completo: String = format!("{}\\src\\mapa.txt", diretorio_atual);
+    let diretorio_completo = std::env::current_dir()
+        .expect("Não foi possível obter o diretório atual.")
+        .join("src")
+        .join("mapa.txt");
 
     //Aqui eu peguei o arquivo e to lendo as linhas do buffer criado.
     let mapa_arquivo: File =
-        File::open(diretorio_completo).expect("Há um erro na leitura do arquivo mapa.txt, erro");
-    let interativo: BufReader<File> = BufReader::new(mapa_arquivo);
+        File::open(&diretorio_completo).expect("Há um erro na leitura do arquivo mapa.txt, erro");
 
+
+    let interativo: BufReader<File> = BufReader::new(mapa_arquivo);
     let mut matriz: Vec<Vec<char>> = Vec::new();
 
+
+
+    //To criando(ou não) um vetor de vetores que recebe o seguinte padrão: vetor[linha][coluna];
     for linha in interativo.lines() {
-        //To criando(ou não) um vetor de vetores que recebe o seguinte padrão: vetor[linha][coluna];
         match linha {
             Ok(valor) => matriz.push(valor.chars().collect()),
             Err(e) => {
