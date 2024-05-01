@@ -8,15 +8,18 @@ use crossterm::{
 use std::io::{self, Write};
 use std::process;
 
+
 pub struct Jogo {
     carteiro: Carteiro,
     caixa: Caixa,
+    
 }
 
 impl Jogo {
     pub fn new() -> Self {
         let carteiro = Carteiro::new();
         let caixa = Caixa::new();
+
 
         Jogo { carteiro, caixa } // tem que criar um retorno pra cada um "carteiro" e "caixa" que retorne
     }
@@ -26,8 +29,23 @@ impl Jogo {
         //Lógica escolhida para jogar após as posições e status forem modificados
     }
 
-    fn cria_jogo(&self, mapa: &Vec<Vec<char>>) {
+    fn cria_jogo(&mut self, mapa: &Vec<Vec<char>>) {
         let (posicao_carteiro, posicao_caixa, posicao_final) = self.retorna_posicao(mapa);
+
+        if !self.carteiro.set_posicao(posicao_carteiro) {
+            println!("Não foi possível identificar a posição do carteiro!\n Saindo...");
+            process::exit(1);
+        }
+
+        if !self.caixa.set_posicao(posicao_caixa) {
+            println!("Não foi possível identificar a posição da caixa! \n Saindo...");
+            process::exit(1);
+        }
+
+      
+
+        
+
     }
 
     fn retorna_posicao(
@@ -55,7 +73,7 @@ impl Jogo {
     }
 
     
-    pub fn menu_jogo(&self, mapa: &Vec<Vec<char>>) {
+    pub fn menu_jogo(&mut self, mapa: &Vec<Vec<char>>) {
         loop {
             println!("Bem vindos ao jogo de missão de entrega. Aqui você verá o caminho");
             println!("percorrido pelo entregador ao buscar uma caixa e levar ao local");
@@ -127,4 +145,9 @@ Regras:
         self.esperar_enter();
         self.limpar_tela();
     }
+
+
+
+
+
 }

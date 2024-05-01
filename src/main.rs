@@ -59,7 +59,7 @@ fn receber_mapa() -> Vec<Vec<char>> {
 
 fn main() {
 
-    let jogo: Jogo = Jogo::new(); // Cria a instancia do jogo
+    let mut jogo: Jogo = Jogo::new(); // Cria a instancia do jogo
     jogo.menu_jogo(&receber_mapa()); //Cria a lógica do jogo já passando o mapa como parâmetro
 
 }

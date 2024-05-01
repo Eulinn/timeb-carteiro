@@ -5,9 +5,9 @@ enum Status{
 }
 
 pub struct Caixa{
-    pos_x: i32,
-    pos_y: i32,
-    status: Status
+    pub pos_x: i32,
+    pub pos_y: i32,
+    pub status: Status
 }
 
 impl Caixa {
@@ -22,9 +22,18 @@ impl Caixa {
     }
 
     //modifica a posição da caixa
-    pub fn set_posicao(caixa: &mut Caixa, new_pos: (i32, i32)){
-        caixa.pos_x = new_pos.0;
-        caixa.pos_y = new_pos.1;
+    pub fn set_posicao(&mut self, new_pos: Option<(usize, usize)>) -> bool {
+        match new_pos {
+            Some(posicoes) => {
+                self.pos_x = posicoes.0 as i32;
+                self.pos_y = posicoes.1 as i32;
+                return true;
+            },
+            None => {
+                return false;
+            },
+            
+        }
     }
 
     //modifica o status da caixa
