@@ -20,4 +20,15 @@ impl Caixa {
             status: Status::Menu
         }
     }
+
+    //modifica a posição da caixa
+    pub fn set_posicao(caixa: &mut Caixa, new_x: i32, new_y: i32){
+        caixa.pos_x = new_x;
+        caixa.pos_y = new_y;
+    }
+
+    //modifica o status da caixa
+    pub fn set_status(caixa: &mut Caixa, new_status: Status){
+        caixa.status = new_status;
+    }
 }
