@@ -17,10 +17,10 @@ mod components {
 use components::jogo::Jogo;
 use crossterm::ExecutableCommand;
 
-use std::fs::File;
-use std::io::{self, Write, BufRead, BufReader};
-use std::process;
 use crossterm::terminal::{Clear, ClearType};
+use std::fs::File;
+use std::io::{self, BufRead, BufReader, Write};
+use std::process;
 
 fn receber_mapa() -> Vec<Vec<char>> {
     //to obetendo o diretorio do projeto, e achando o mapa.txt
@@ -31,7 +31,6 @@ fn receber_mapa() -> Vec<Vec<char>> {
         .expect("Dificuldade em tranformar em string seu diretório.");
 
     let diretorio_completo: String = format!("{}\\src\\mapa.txt", diretorio_atual);
-
 
     //Aqui eu peguei o arquivo e to lendo as linhas do buffer criado.
     let mapa_arquivo: File =
@@ -59,48 +58,53 @@ fn receber_mapa() -> Vec<Vec<char>> {
 }
 
 fn limpar_tela() {
-
     io::stdout().execute(Clear(ClearType::All)).unwrap();
     io::stdout().flush().unwrap();
-
 }
 
 fn esperar_enter() {
     let _ = io::stdin().read_line(&mut String::new());
 }
 
+fn mostrar_regras() {
+    limpar_tela();
+    println!("O jogo consiste em fazer com que o carteiro ('&') leve a caixa ('@') até ó ponto desejado ('X')
+em um campo que será uma matriz 20x20, onde ('+') representa um espaço válido..
+Para desenvolver tal projeto vocês terão de usar/desenvolver as estruturas 'carteiro', 'caixa', e 'jogo'.
+Obs:
+    - O carteiro só pode andar um 'índice' por iteração
+    - Apliquem a ideia de Encapsulamento
+    - O código tera uma mapa de exemplo para o teste enquanto estiver em desenvolvimento
+    - No dia da apresentação o código será posto em prática com um código diferente");
+    println!("Aperte ENTER para voltar ao menu!");
+    esperar_enter();
+    limpar_tela();
+}
 
-fn mostra_mapa_bonito(mapa: Vec<Vec<char>>){
-
+fn mostra_mapa_bonito(mapa: Vec<Vec<char>>) {
     for linhas in mapa {
-        for coluna in linhas.iter(){
-            print!("{}   ",coluna);
-        };
-        println!("\n");   
+        for coluna in linhas.iter() {
+            print!("{}   ", coluna);
+        }
+        println!("\n");
     }
 }
 
-
-
-
 fn main() {
     loop {
-        let mut opt = String::new();
+        let mut opt: String = String::new();
         println!("Jogo de missão de entrega. Selecione a opção desejada e aperte Enter: ");
         println!("(A) - Jogar\n(B) - Regras\n(C) - Sair");
-
 
         match io::stdin().read_line(&mut opt) {
             Ok(_) => match opt.trim().to_lowercase().as_str() {
                 "a" => {
                     limpar_tela();
-                    println!("Vamos, antes, verificar se seu mapa está compatível com nosso jogo!
+                    println!("Vamos, antes, verificar se seu mapa está compatível com nosso jogo!\n\nAperte ENTER para fazer a verificação!");
 
-Aperte ENTER para fazer a verificação!");
-                    
                     esperar_enter();
                     let mapa: Vec<Vec<char>> = receber_mapa();
-                    
+
                     limpar_tela();
                     println!("Este é o mapa que seu carteiro(&) deve percorrer:");
                     mostra_mapa_bonito(mapa);
@@ -108,20 +112,7 @@ Aperte ENTER para fazer a verificação!");
                     esperar_enter();
                     break;
                 }
-                "b" => {
-                    limpar_tela();
-
-                    println!("O jogo consiste em fazer com que o carteiro ('&') leve a caixa ('@') até ó ponto desejado ('X') em um campo que será uma matriz 20x20, onde ('+') representa um espaço válido..
-Para desenvolver tal projeto vocês terão de usar/desenvolver as estruturas 'carteiro', 'caixa', e 'jogo'.
-Obs:
-    - O carteiro só pode andar um 'índice' por iteração
-    - Apliquem a ideia de Encapsulamento
-    - O código tera uma mapa de exemplo para o teste enquanto estiver em desenvolvimento
-    - No dia da apresentação o código será posto em prática com um código diferente");
-                    println!("Aperte ENTER para voltar ao menu!");
-                    esperar_enter();
-                    limpar_tela();
-                }
+                "b" => mostrar_regras(),
                 "c" => {
                     println!("Saindo...");
                     process::exit(0);
@@ -138,7 +129,6 @@ Obs:
     }
     limpar_tela();
     println!("Jogo Começa aqui"); // Jogo começa aqui
-
 
     // let jogo: Jogo = Jogo::new();
     // jogo.cria_jogo(); // aqui vou botar o mapa como parâmetro
