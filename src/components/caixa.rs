@@ -22,9 +22,9 @@ impl Caixa {
     }
 
     //modifica a posição da caixa
-    pub fn set_posicao(caixa: &mut Caixa, new_x: i32, new_y: i32){
-        caixa.pos_x = new_x;
-        caixa.pos_y = new_y;
+    pub fn set_posicao(caixa: &mut Caixa, new_pos: (i32, i32)){
+        caixa.pos_x = new_pos.0;
+        caixa.pos_y = new_pos.1;
     }
 
     //modifica o status da caixa
