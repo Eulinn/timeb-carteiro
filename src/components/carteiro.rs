@@ -16,11 +16,21 @@ impl Carteiro{
     //aqui tem que retorna o objeto do Carteiro
 
 
-    Carteiro {
-        pos_x: 0,
-        pos_y: 0,
-        status: Status::Menu
-    }
+        Carteiro {
+            pos_x: 0,
+            pos_y: 0,
+            status: Status::Menu
+        }
     }
 
+    //modifica a posição do carteiro
+    pub fn set_posicao(carteiro: &mut Carteiro, new_x: i32, new_y: i32){
+        carteiro.pos_x = new_x;
+        carteiro.pos_y = new_y;
+    }
+    
+    //modifica o status do carteiro
+    pub fn set_status(carteiro: &mut Carteiro, new_status: Status){
+        carteiro.status = new_status;
+    }
 }
