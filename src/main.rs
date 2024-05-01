@@ -15,11 +15,9 @@ mod components {
 }
 
 use components::jogo::Jogo;
-use crossterm::ExecutableCommand;
 
-use crossterm::terminal::{Clear, ClearType};
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, Write};
+use std::io::{BufRead, BufReader};
 use std::process;
 
 fn receber_mapa() -> Vec<Vec<char>> {
@@ -58,91 +56,10 @@ fn receber_mapa() -> Vec<Vec<char>> {
 }
 
 
-//Facilitar a visualização do conteúdo sem poluição.
-fn limpar_tela() {
-    io::stdout().execute(Clear(ClearType::All)).unwrap();
-    io::stdout().flush().unwrap();
-}
-
-//caso de algum erro no enter, é culpa desta função.
-fn esperar_enter() {
-    let _ = io::stdin().read_line(&mut String::new());
-}
-
-
-//essa função pode ser chamada quando quiser para saber as regras do jogo
-fn mostrar_regras() {
-    limpar_tela();
-    println!("O jogo consiste em fazer com que o carteiro ('&') leve a caixa ('@') até ó ponto desejado ('X')
-em um campo que será uma matriz 20x20, onde ('+') representa um espaço válido..
-Para desenvolver tal projeto vocês terão de usar/desenvolver as estruturas 'carteiro', 'caixa', e 'jogo'.
-Obs:
-    - O carteiro só pode andar um 'índice' por iteração
-    - Apliquem a ideia de Encapsulamento
-    - O código tera uma mapa de exemplo para o teste enquanto estiver em desenvolvimento
-    - No dia da apresentação o código será posto em prática com um código diferente");
-    println!("Aperte ENTER para voltar ao menu!");
-    esperar_enter();
-    limpar_tela();
-}
-
-
-//Função apenas para deixar a visualização do mapa melhor
-fn mostra_mapa_bonito(mapa: Vec<Vec<char>>) {
-    for linhas in mapa {
-        for coluna in linhas.iter() {
-            print!("{}   ", coluna);
-        }
-        println!("\n");
-    }
-}
 
 fn main() {
-    loop {
-        let mut opt: String = String::new();
-        println!("Jogo de missão de entrega. Selecione a opção desejada e aperte Enter: ");
-        println!("(A) - Jogar\n(B) - Regras\n(C) - Sair");
 
+    let jogo: Jogo = Jogo::new(); // Cria a instancia do jogo
+    jogo.menu_jogo(&receber_mapa()); //Cria a lógica do jogo já passando o mapa como parâmetro
 
-
-
-
-        //Faz o pedido de uma opção pro usuário e trata essa opção da forma correta
-        match io::stdin().read_line(&mut opt) {
-            Ok(_) => match opt.trim().to_lowercase().as_str() {
-                "a" => {
-                    limpar_tela();
-                    println!("Vamos, antes, verificar se seu mapa está compatível com nosso jogo!\n\nAperte ENTER para fazer a verificação!");
-
-                    esperar_enter();
-                    let mapa: Vec<Vec<char>> = receber_mapa();
-
-                    limpar_tela();
-                    println!("Este é o mapa que seu carteiro(&) deve percorrer:");
-                    mostra_mapa_bonito(mapa);
-                    println!("Aperte ENTER para iniciar o jogo");
-                    esperar_enter();
-                    break;//Único break do loop, ou o jogo roda ou o arquivo fecha, sem opções
-                }
-                "b" => mostrar_regras(),
-                "c" => {
-                    println!("Saindo...");
-                    process::exit(0);
-                }
-                _ => {
-                    limpar_tela();
-                }
-            },
-            Err(e) => {
-                println!("Erro ao identificar seu valor digitado: {}", e);
-                process::exit(1);
-            }
-        }
-    }
-    limpar_tela();
-    println!("Jogo Começa aqui"); // Jogo começa aqui
-
-    // let jogo: Jogo = Jogo::new();
-    // jogo.cria_jogo(); // aqui vou botar o mapa como parâmetro
-    // jogo.joga();
 }
