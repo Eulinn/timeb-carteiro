@@ -1,10 +1,12 @@
 use crate::components::caixa::Caixa;
 use crate::components::carteiro::Carteiro;
 
-
-use std::process;
-use crossterm::{terminal::{Clear, ClearType}, ExecutableCommand};
+use crossterm::{
+    terminal::{Clear, ClearType},
+    ExecutableCommand,
+};
 use std::io::{self, Write};
+use std::process;
 
 pub struct Jogo {
     carteiro: Carteiro,
@@ -21,15 +23,44 @@ impl Jogo {
 
     pub fn joga(&self) {
 
-        //Lógica escolhida para jogar após as posições e status forem modificadas
+        //Lógica escolhida para jogar após as posições e status forem modificados
     }
 
     fn cria_jogo(&self, mapa: &Vec<Vec<char>>) {
+        let (posicao_carteiro, posicao_caixa, posicao_final) = self.retorna_posicao(mapa);
 
-        // aqui vou pegar a posição do carteiro, da caixa e do destino (todos obrigatórios) e atualizar nas suas classes
+        
+
     }
 
+    fn retorna_posicao(
+        &self,
+        matriz: &Vec<Vec<char>>,
+    ) -> (Option<(usize, usize)>, Option<(usize, usize)>, Option<(usize, usize)>) {
+        let mut carteiro: Option<(usize, usize)> = None;
+        let mut caixa: Option<(usize, usize)> = None;
+        let mut finall: Option<(usize, usize)> = None;
 
+        for linha in 0..20 {
+            for coluna in 0..20 {
+                match matriz[linha][coluna] {
+                    '&' => {
+                        carteiro = Some((linha, coluna));
+                    }
+                    '@' => {
+                        caixa = Some((linha, coluna));
+                    }
+                    'X' => {
+                        finall = Some((linha, coluna));
+                    }
+
+                    _ => (),
+                }
+            }
+        }
+
+        (carteiro, caixa, finall)
+    }
 
     pub fn menu_jogo(&self, mapa: &Vec<Vec<char>>) {
         loop {
@@ -45,7 +76,7 @@ impl Jogo {
                 Ok(_) => match opt.trim().to_lowercase().as_str() {
                     "a" => {
                         self.limpar_tela();
-                        
+                        self.cria_jogo(mapa);
                         break; //Único break do loop, ou o jogo roda ou o arquivo fecha, sem opções
                     }
                     "b" => self.mostrar_regras(),
@@ -91,9 +122,4 @@ Obs:
         self.esperar_enter();
         self.limpar_tela();
     }
-
-
-
-
-
 }

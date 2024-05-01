@@ -24,13 +24,13 @@ impl Carteiro{
     }
 
     //modifica a posição do carteiro
-    pub fn set_posicao(carteiro: &mut Carteiro, new_x: i32, new_y: i32){
-        carteiro.pos_x = new_x;
-        carteiro.pos_y = new_y;
+    pub fn set_posicao(&mut self, new_x: i32, new_y: i32){
+        self.pos_x = new_x;
+        self.pos_y = new_y;
     }
     
     //modifica o status do carteiro
-    pub fn set_status(carteiro: &mut Carteiro, new_status: Status){
-        carteiro.status = new_status;
+    pub fn set_status(&mut self, new_status: Status){
+        self.status = new_status
     }
 }
