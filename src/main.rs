@@ -57,15 +57,20 @@ fn receber_mapa() -> Vec<Vec<char>> {
     return matriz;
 }
 
+
+//Facilitar a visualização do conteúdo sem poluição.
 fn limpar_tela() {
     io::stdout().execute(Clear(ClearType::All)).unwrap();
     io::stdout().flush().unwrap();
 }
 
+//caso de algum erro no enter, é culpa desta função.
 fn esperar_enter() {
     let _ = io::stdin().read_line(&mut String::new());
 }
 
+
+//essa função pode ser chamada quando quiser para saber as regras do jogo
 fn mostrar_regras() {
     limpar_tela();
     println!("O jogo consiste em fazer com que o carteiro ('&') leve a caixa ('@') até ó ponto desejado ('X')
@@ -81,6 +86,8 @@ Obs:
     limpar_tela();
 }
 
+
+//Função apenas para deixar a visualização do mapa melhor
 fn mostra_mapa_bonito(mapa: Vec<Vec<char>>) {
     for linhas in mapa {
         for coluna in linhas.iter() {
@@ -96,6 +103,11 @@ fn main() {
         println!("Jogo de missão de entrega. Selecione a opção desejada e aperte Enter: ");
         println!("(A) - Jogar\n(B) - Regras\n(C) - Sair");
 
+
+
+
+
+        //Faz o pedido de uma opção pro usuário e trata essa opção da forma correta
         match io::stdin().read_line(&mut opt) {
             Ok(_) => match opt.trim().to_lowercase().as_str() {
                 "a" => {
@@ -110,7 +122,7 @@ fn main() {
                     mostra_mapa_bonito(mapa);
                     println!("Aperte ENTER para iniciar o jogo");
                     esperar_enter();
-                    break;
+                    break;//Único break do loop, ou o jogo roda ou o arquivo fecha, sem opções
                 }
                 "b" => mostrar_regras(),
                 "c" => {
