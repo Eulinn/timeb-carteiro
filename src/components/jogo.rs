@@ -8,11 +8,9 @@ use crossterm::{
 use std::io::{self, Write};
 use std::process;
 
-
 pub struct Jogo {
     carteiro: Carteiro,
     caixa: Caixa,
-    
 }
 
 impl Jogo {
@@ -20,14 +18,19 @@ impl Jogo {
         let carteiro = Carteiro::new();
         let caixa = Caixa::new();
 
-
         Jogo { carteiro, caixa } // tem que criar um retorno pra cada um "carteiro" e "caixa" que retorne
     }
 
-    pub fn joga(&self) {
+    pub fn joga(&self, pos_x: i32, pos_y: i32) {
 
-        //Lógica escolhida para jogar após as posições e status forem modificados
+        
+        //Aplicar a nossa versão da lógica do A* aqui!
+
+
+
     }
+
+
 
     fn cria_jogo(&mut self, mapa: &Vec<Vec<char>>) {
         let (posicao_carteiro, posicao_caixa, posicao_final) = self.retorna_posicao(mapa);
@@ -42,10 +45,21 @@ impl Jogo {
             process::exit(1);
         }
 
-      
+        let (mut pos_x, mut pos_y): (i32, i32) = (0, 0);
+        match posicao_final {
+            Some(val) => {
+                pos_x = val.0 as i32;
+                pos_y = val.1 as i32;
+            }
+            None => {
+                println!("Não foi possível identificar a posição final! \n Saindo...");
+                process::exit(1);
+            }
+        }
 
-        
+        self.joga(pos_x, pos_y);
 
+        // aqui os dois foram configurado
     }
 
     fn retorna_posicao(
@@ -72,7 +86,6 @@ impl Jogo {
         (carteiro, caixa, finall)
     }
 
-    
     pub fn menu_jogo(&mut self, mapa: &Vec<Vec<char>>) {
         loop {
             println!("Bem vindos ao jogo de missão de entrega. Aqui você verá o caminho");
@@ -145,9 +158,4 @@ Regras:
         self.esperar_enter();
         self.limpar_tela();
     }
-
-
-
-
-
 }
