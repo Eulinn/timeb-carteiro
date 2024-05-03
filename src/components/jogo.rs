@@ -4,6 +4,8 @@ use crate::components::caixa::StatusCai;
 use crate::components::carteiro::Carteiro;
 use crate::components::carteiro::StatusCar;
 
+
+
 use crossterm::{
     terminal::{Clear, ClearType},
     ExecutableCommand,
@@ -15,6 +17,8 @@ pub struct Jogo {
     carteiro: Carteiro,
     caixa: Caixa,
 }
+
+
 
 impl Jogo {
     pub fn new() -> Self {
@@ -30,9 +34,73 @@ impl Jogo {
         self.caixa.set_status(StatusCai::SemCarteiro);
 
         //implemento o A*
+        
+
+        let mut ja_fui: Vec<(i32,i32)> = vec![(self.carteiro.pos_x, self.carteiro.pos_y)];
+        let mut caminho_escolhido: Vec<(i32,i32)> = Vec::new();
+        
+
+        loop {
+            let destino = match self.carteiro.status {
+                StatusCar::JogandoSemCaixa => {
+                    (self.caixa.pos_x, self.caixa.pos_y)
+                }
+                StatusCar::JogandoComCaixa => {
+                    (pos_x, pos_y)
+                }
+    
+                _ => {
+                    (pos_x, pos_y)
+                }
+            };
+
+
+
+            let vizinhos = self.receber_vizinhos(mapa);
+            let vizinhos = self.diferenca_de_vetores(ja_fui.clone(), vizinhos);
+
+            let mut distancia_mais_proxima = f64::INFINITY;
+            let mut vizinho_decente = None;
+
+            for vizinho in vizinhos.iter() {
+                let distancia = self.distancia_entre_pontos(vizinho.0, vizinho.1, destino.0, destino.1);
+                if distancia < distancia_mais_proxima {
+                    distancia_mais_proxima = distancia;
+                    vizinho_decente = Some(*vizinho);
+                }
+            }
+
+            ja_fui.extend(vizinhos);
+            self.carteiro.set_posicao(vizinho_decente.map(|(x,y)| (x as usize, y as usize)));
+
+
+            println!("{:?}", vizinho_decente);
+            self.esperar_enter();
+
+
+        }
+
+
+
+
+
 
 
     }
+
+    fn diferenca_de_vetores(&self, lista_ja_fui:Vec<(i32,i32)>, vizinhos:Vec<(i32,i32)>) -> Vec<(i32, i32)> {
+        let mut diferenca:Vec<(i32,i32)> = Vec::new();
+
+        for elemento in vizinhos{
+            if !lista_ja_fui.contains(&elemento){
+                diferenca.push(elemento);
+            }
+        }
+
+
+        diferenca
+    }
+
 
     fn distancia_entre_pontos(&self, x1: i32, y1: i32, x2: i32, y2: i32) -> f64 {
         ((x2 - x1).pow(2) as f64 + (y2 - y1).pow(2) as f64).sqrt()
