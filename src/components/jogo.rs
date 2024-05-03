@@ -1,5 +1,8 @@
 use crate::components::caixa::Caixa;
+use crate::components::caixa::StatusCai;
+
 use crate::components::carteiro::Carteiro;
+use crate::components::carteiro::StatusCar;
 
 use crossterm::{
     terminal::{Clear, ClearType},
@@ -23,40 +26,25 @@ impl Jogo {
 
     pub fn joga(&mut self, pos_x: i32, pos_y: i32, mapa: &Vec<Vec<char>>) {
         //Definir status do carteiro e da caixa
+        self.carteiro.set_status(StatusCar::JogandoSemCaixa);
+        self.caixa.set_status(StatusCai::SemCarteiro);
 
-
-
-        
-        //Aplicar a nossa versão da lógica do A* aqui!
-
-        loop {
-            let vizinhos = self.receber_vizinhos(mapa);
-            
-            //if para verificar o status do carteiro se vai pro final ou pra caixa
-            for vizinho in vizinhos.iter() {
-
-                    //if para verificar qual é o mais perto dos vizinhos e pular para o tal
-
-            }
-
-
-        }
-
-
+        //implemento o A*
 
 
     }
 
+    fn distancia_entre_pontos(&self, x1: i32, y1: i32, x2: i32, y2: i32) -> f64 {
+        ((x2 - x1).pow(2) as f64 + (y2 - y1).pow(2) as f64).sqrt()
+    }
 
-
-    fn receber_vizinhos(&mut self, mapa: &Vec<Vec<char>>) -> Vec<(i32,i32)>{
+    fn receber_vizinhos(&mut self, mapa: &Vec<Vec<char>>) -> Vec<(i32, i32)> {
         let mut posicoes = vec![
-            (self.carteiro.pos_x-1, self.carteiro.pos_y),//cima
-            (self.carteiro.pos_x+1, self.carteiro.pos_y),//baixo
-            (self.carteiro.pos_x, self.carteiro.pos_y-1),//frente
-            (self.carteiro.pos_x, self.carteiro.pos_y+1),//costas
+            (self.carteiro.pos_x - 1, self.carteiro.pos_y), //cima
+            (self.carteiro.pos_x + 1, self.carteiro.pos_y), //baixo
+            (self.carteiro.pos_x, self.carteiro.pos_y - 1), //frente
+            (self.carteiro.pos_x, self.carteiro.pos_y + 1), //costas
         ];
-
 
         let mut index = 0;
         while index < posicoes.len() {
@@ -70,18 +58,11 @@ impl Jogo {
                 continue;
             }
 
-
-            index+=1;            
+            index += 1;
         }
-        
-
-
-        
 
         return posicoes;
     }
-
-
 
     fn cria_jogo(&mut self, mapa: &Vec<Vec<char>>) {
         let (posicao_carteiro, posicao_caixa, posicao_final) = self.retorna_posicao(mapa);

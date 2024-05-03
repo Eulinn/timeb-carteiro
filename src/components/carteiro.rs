@@ -1,4 +1,4 @@
-enum Status {
+pub enum StatusCar {
     Menu, //Significa que não foi identificado ainda a posição do carteiro no mapa, então [0][0] é a posição nula definida
     JogandoSemCaixa, //Significa que a posição de interesse para o carteiro é a mesma da Caixa.
     JogandoComCaixa, //Significa que a posição de interesse para o carteiro é a do X
@@ -8,7 +8,7 @@ enum Status {
 pub struct Carteiro {
     pub pos_x: i32,
     pub pos_y: i32,
-    pub status: Status,
+    pub status: StatusCar,
     pub caminho: Vec<(i32,i32)>
 }
 
@@ -19,7 +19,7 @@ impl Carteiro {
         Carteiro {
             pos_x: 0,
             pos_y: 0,
-            status: Status::Menu,
+            status: StatusCar::Menu,
             caminho: vec![],
         }
     }
@@ -40,7 +40,7 @@ impl Carteiro {
     }
 
     //modifica o status do carteiro
-    pub fn set_status(&mut self, new_status: Status) {
+    pub fn set_status(&mut self, new_status: StatusCar) {
         self.status = new_status
     }
 }

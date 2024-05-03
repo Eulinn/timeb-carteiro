@@ -1,4 +1,4 @@
-enum Status{
+pub enum StatusCai{
     Menu, //Significa que não foi identificado ainda a posição da caixa no mapa, então [0][0] é a posição nula definida
     ComCarteiro, // Siginifica que a posição da caixa é a mesma do carteiro, mas não será mostrada no mapa
     SemCarteiro // Siginifica que ela tem uma posição no mapa, mas NÃO é a mesma que a do carteiro
@@ -7,7 +7,7 @@ enum Status{
 pub struct Caixa{
     pub pos_x: i32,
     pub pos_y: i32,
-    pub status: Status
+    pub status: StatusCai
 }
 
 impl Caixa {
@@ -17,7 +17,7 @@ impl Caixa {
         Caixa {
             pos_x: 0,
             pos_y: 0,
-            status: Status::Menu
+            status: StatusCai::Menu
         }
     }
 
@@ -37,7 +37,7 @@ impl Caixa {
     }
 
     //modifica o status da caixa
-    pub fn set_status(caixa: &mut Caixa, new_status: Status){
-        caixa.status = new_status;
+    pub fn set_status(&mut self, new_status: StatusCai){
+        self.status = new_status;
     }
 }
