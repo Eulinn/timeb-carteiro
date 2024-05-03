@@ -21,13 +21,64 @@ impl Jogo {
         Jogo { carteiro, caixa } // tem que criar um retorno pra cada um "carteiro" e "caixa" que retorne
     }
 
-    pub fn joga(&self, pos_x: i32, pos_y: i32) {
+    pub fn joga(&mut self, pos_x: i32, pos_y: i32, mapa: &Vec<Vec<char>>) {
+        //Definir status do carteiro e da caixa
+
+
 
         
         //Aplicar a nossa versão da lógica do A* aqui!
 
+        loop {
+            let vizinhos = self.receber_vizinhos(mapa);
+            
+            //if para verificar o status do carteiro se vai pro final ou pra caixa
+            for vizinho in vizinhos.iter() {
+
+                    //if para verificar qual é o mais perto dos vizinhos e pular para o tal
+
+            }
 
 
+        }
+
+
+
+
+    }
+
+
+
+    fn receber_vizinhos(&mut self, mapa: &Vec<Vec<char>>) -> Vec<(i32,i32)>{
+        let mut posicoes = vec![
+            (self.carteiro.pos_x-1, self.carteiro.pos_y),//cima
+            (self.carteiro.pos_x+1, self.carteiro.pos_y),//baixo
+            (self.carteiro.pos_x, self.carteiro.pos_y-1),//frente
+            (self.carteiro.pos_x, self.carteiro.pos_y+1),//costas
+        ];
+
+
+        let mut index = 0;
+        while index < posicoes.len() {
+            if posicoes[index].0 < 0 || posicoes[index].1 < 0 {
+                posicoes.remove(index);
+                continue;
+            }
+
+            if mapa[posicoes[index].0 as usize][posicoes[index].1 as usize] == '-' {
+                posicoes.remove(index);
+                continue;
+            }
+
+
+            index+=1;            
+        }
+        
+
+
+        
+
+        return posicoes;
     }
 
 
@@ -57,7 +108,7 @@ impl Jogo {
             }
         }
 
-        self.joga(pos_x, pos_y);
+        self.joga(pos_x, pos_y, mapa);
 
         // aqui os dois foram configurado
     }

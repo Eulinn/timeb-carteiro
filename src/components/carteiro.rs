@@ -9,6 +9,7 @@ pub struct Carteiro {
     pub pos_x: i32,
     pub pos_y: i32,
     pub status: Status,
+    pub caminho: Vec<(i32,i32)>
 }
 
 impl Carteiro {
@@ -19,6 +20,7 @@ impl Carteiro {
             pos_x: 0,
             pos_y: 0,
             status: Status::Menu,
+            caminho: vec![],
         }
     }
 
