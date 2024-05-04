@@ -1,14 +1,16 @@
 use crate::components::caixa::Caixa;
-use crate::components::caixa::StatusCai;
 
 use crate::components::carteiro::Carteiro;
 use crate::components::carteiro::StatusCar;
 
 
 
+
 use crossterm::{
     terminal::{Clear, ClearType},
     ExecutableCommand,
+    style::{Color,SetForegroundColor},
+    execute
 };
 use std::io::{self, Write};
 use std::process;
@@ -18,43 +20,34 @@ pub struct Jogo {
     caixa: Caixa,
 }
 
-
-
 impl Jogo {
     pub fn new() -> Self {
         let carteiro = Carteiro::new();
         let caixa = Caixa::new();
 
-        Jogo { carteiro, caixa } // tem que criar um retorno pra cada um "carteiro" e "caixa" que retorne
+        Jogo { carteiro, caixa }
     }
 
     pub fn joga(&mut self, pos_x: i32, pos_y: i32, mapa: &Vec<Vec<char>>) {
         //Definir status do carteiro e da caixa
         self.carteiro.set_status(StatusCar::JogandoSemCaixa);
-        self.caixa.set_status(StatusCai::SemCarteiro);
 
         //implemento o A*
-        
 
-        let mut ja_fui: Vec<(i32,i32)> = vec![(self.carteiro.pos_x, self.carteiro.pos_y)];
-        let mut caminho_escolhido: Vec<(i32,i32)> = Vec::new();
-        
+        let mut ja_fui: Vec<(i32, i32)> = vec![(self.carteiro.pos_x, self.carteiro.pos_y)];
+        let mut caminho_escolhido: Vec<(i32, i32)> = Vec::new();
 
         loop {
             let destino = match self.carteiro.status {
-                StatusCar::JogandoSemCaixa => {
-                    (self.caixa.pos_x, self.caixa.pos_y)
+                StatusCar::JogandoSemCaixa => (self.caixa.pos_x, self.caixa.pos_y),
+                StatusCar::JogandoComCaixa => (pos_x, pos_y),
+                StatusCar::Fim => {
+                    self.fim_de_jogo(mapa, caminho_escolhido);
+                    break;
                 }
-                StatusCar::JogandoComCaixa => {
-                    (pos_x, pos_y)
-                }
-    
-                _ => {
-                    (pos_x, pos_y)
-                }
+
+                _ => (pos_x, pos_y),
             };
-
-
 
             let vizinhos = self.receber_vizinhos(mapa);
             let vizinhos = self.diferenca_de_vetores(ja_fui.clone(), vizinhos);
@@ -63,7 +56,8 @@ impl Jogo {
             let mut vizinho_decente = None;
 
             for vizinho in vizinhos.iter() {
-                let distancia = self.distancia_entre_pontos(vizinho.0, vizinho.1, destino.0, destino.1);
+                let distancia =
+                    self.distancia_entre_pontos(vizinho.0, vizinho.1, destino.0, destino.1);
                 if distancia < distancia_mais_proxima {
                     distancia_mais_proxima = distancia;
                     vizinho_decente = Some(*vizinho);
@@ -71,65 +65,71 @@ impl Jogo {
             }
 
             ja_fui.extend(vizinhos);
-            self.carteiro.set_posicao(vizinho_decente.map(|(x,y)| (x as usize, y as usize)));
+            self.carteiro
+                .set_posicao(vizinho_decente.map(|(x, y)| (x as usize, y as usize)));
 
 
-            println!("{:?}", vizinho_decente);
-            self.esperar_enter();
+            if self.carteiro.pos_x == self.caixa.pos_x && self.carteiro.pos_y == self.caixa.pos_y {
+                self.carteiro.set_status(StatusCar::JogandoComCaixa);
+            }
 
+            if self.carteiro.pos_x == pos_x && self.carteiro.pos_y == pos_y {
+                self.carteiro.set_status(StatusCar::Fim);
+            }
 
+            caminho_escolhido.push(vizinho_decente.unwrap());
+
+            // println!("{:?}", vizinho_decente);
+            // self.esperar_enter();
         }
-
-
-
-
-
-
-
     }
 
-    fn diferenca_de_vetores(&self, lista_ja_fui:Vec<(i32,i32)>, vizinhos:Vec<(i32,i32)>) -> Vec<(i32, i32)> {
-        let mut diferenca:Vec<(i32,i32)> = Vec::new();
+    fn diferenca_de_vetores(
+        &self,
+        lista_ja_fui: Vec<(i32, i32)>,
+        vizinhos: Vec<(i32, i32)>,
+    ) -> Vec<(i32, i32)> {
+        let mut diferenca: Vec<(i32, i32)> = Vec::new();
 
-        for elemento in vizinhos{
-            if !lista_ja_fui.contains(&elemento){
+        for elemento in vizinhos {
+            if !lista_ja_fui.contains(&elemento) {
                 diferenca.push(elemento);
             }
         }
 
-
         diferenca
     }
-
 
     fn distancia_entre_pontos(&self, x1: i32, y1: i32, x2: i32, y2: i32) -> f64 {
         ((x2 - x1).pow(2) as f64 + (y2 - y1).pow(2) as f64).sqrt()
     }
 
     fn receber_vizinhos(&mut self, mapa: &Vec<Vec<char>>) -> Vec<(i32, i32)> {
-        let mut posicoes = vec![
+        let posicoes = vec![
             (self.carteiro.pos_x - 1, self.carteiro.pos_y), //cima
             (self.carteiro.pos_x + 1, self.carteiro.pos_y), //baixo
             (self.carteiro.pos_x, self.carteiro.pos_y - 1), //frente
             (self.carteiro.pos_x, self.carteiro.pos_y + 1), //costas
         ];
 
-        let mut index = 0;
-        while index < posicoes.len() {
-            if posicoes[index].0 < 0 || posicoes[index].1 < 0 {
-                posicoes.remove(index);
-                continue;
-            }
+        let mut vizinhos_validos = Vec::new();
 
-            if mapa[posicoes[index].0 as usize][posicoes[index].1 as usize] == '-' {
-                posicoes.remove(index);
-                continue;
-            }
+        
 
-            index += 1;
+        for posicao in posicoes {
+            let (x, y) = posicao;
+            if x >= 0 && y >= 0 && (x as usize) < mapa.len() && (y as usize) < mapa[0].len() {
+                if mapa[x as usize][y as usize] != '-' {
+                    vizinhos_validos.push(posicao); 
+                }
+            }
         }
 
-        return posicoes;
+
+
+
+
+        vizinhos_validos
     }
 
     fn cria_jogo(&mut self, mapa: &Vec<Vec<char>>) {
@@ -161,6 +161,41 @@ impl Jogo {
 
         // aqui os dois foram configurado
     }
+
+
+    fn fim_de_jogo(&self, mapa: &Vec<Vec<char>>, caminho: Vec<(i32,i32)>){
+        let cor_caminho = Color::Red;
+        let cor_mapa = Color::White;
+
+        for (x, linha) in mapa.iter().enumerate() {
+            for (y, coluna) in linha.iter().enumerate() {
+                let cor  = if caminho.contains(&(x as i32,y as i32)) { 
+                    cor_caminho
+                } else { 
+                    cor_mapa
+                };
+
+
+                execute!(
+                    std::io::stdout(),
+                    SetForegroundColor(cor),
+                );
+
+                print!("{}",coluna);
+
+
+                execute!(
+                    std::io::stdout(),
+                    SetForegroundColor(Color::Reset),
+                );
+            } 
+
+            println!();
+        }
+
+
+    }
+    
 
     fn retorna_posicao(
         &self,
