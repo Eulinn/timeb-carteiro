@@ -6,8 +6,8 @@ pub enum StatusCar {
 }
 
 pub struct Carteiro {
-    pub pos_x: i32,
-    pub pos_y: i32,
+    pub pos_x: i32, // A linha
+    pub pos_y: i32, // A coluna
     pub status: StatusCar,
     pub caminho: Vec<(i32,i32)>
 }
