@@ -78,7 +78,7 @@ impl Jogo {
             self.carteiro
                 .set_posicao(vizinho_decente.map(|(x, y)| (x as usize, y as usize)));
 
-            if self.carteiro.pos_y == 19 || self.carteiro.pos_y == 0 && vizinhos.len() <= 1 {
+            if self.carteiro.pos_y == 19 || self.carteiro.pos_y == 0 && vizinhos.len() <= 1 && interacao_obstaculo {
                 let (x_convert, y_convert) = caminho_escolhido[caminho_escolhido.len() - voltas];
                 self.carteiro
                     .set_posicao(Some((x_convert as usize, y_convert as usize)));
@@ -108,6 +108,7 @@ impl Jogo {
 
             if self.carteiro.pos_x == self.caixa.pos_x && self.carteiro.pos_y == self.caixa.pos_y {
                 self.carteiro.set_status(StatusCar::JogandoComCaixa);
+                ja_fui.clear();
             }
 
             if self.carteiro.pos_x == pos_x && self.carteiro.pos_y == pos_y {
