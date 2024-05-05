@@ -54,12 +54,7 @@ impl Jogo {
             let mut distancia_mais_proxima = f64::INFINITY;
             let mut vizinho_decente = None;
 
-            voltas = if interacao_obstaculo {
-                
-                voltas + 1
-            } else {
-                0
-            };
+            voltas = if interacao_obstaculo { voltas + 1 } else { 0 };
 
             for vizinho in vizinhos.iter() {
                 let distancia =
@@ -68,42 +63,46 @@ impl Jogo {
                     distancia_mais_proxima = distancia;
                     vizinho_decente = Some(*vizinho);
                 }
-
-
             }
-
 
             ja_fui.extend(vizinhos.clone());
 
             self.carteiro
                 .set_posicao(vizinho_decente.map(|(x, y)| (x as usize, y as usize)));
 
-            if self.carteiro.pos_y == 19 || self.carteiro.pos_y == 0 && vizinhos.len() <= 1 && interacao_obstaculo {
-                let (x_convert, y_convert) = caminho_escolhido[caminho_escolhido.len() - voltas];
-                self.carteiro
-                    .set_posicao(Some((x_convert as usize, y_convert as usize)));
-                let (mut vizinhos, interacao_obstaculo) =
-                    self.receber_vizinhos(mapa, self.carteiro.pos_x, self.carteiro.pos_y);
+            if self.carteiro.pos_y == 19
+                || self.carteiro.pos_y == 0
+                || self.carteiro.pos_x == 19
+                || self.carteiro.pos_x == 0 && vizinhos.len() <= 1 && interacao_obstaculo
+            {
+                if let Some((x_convert, y_convert)) = caminho_escolhido.get(caminho_escolhido.len() - voltas)
+                {
+                    self.carteiro
+                        .set_posicao(Some((*x_convert as usize, *y_convert as usize)));
+                    let (mut vizinhos, _interacao_obstaculo) =
+                        self.receber_vizinhos(mapa, self.carteiro.pos_x, self.carteiro.pos_y);
 
-                let mut distancia_mais_proxima = f64::INFINITY;
-                let mut vizinho_decente = None;
+                    let mut distancia_mais_proxima = f64::INFINITY;
+                    let mut vizinho_decente = None;
 
-                for vizinho in vizinhos.iter() {
-                    let distancia =
-                        self.distancia_entre_pontos(vizinho.0, vizinho.1, destino.0, destino.1);
-                    if distancia < distancia_mais_proxima {
-                        distancia_mais_proxima = distancia;
-                        vizinho_decente = Some(*vizinho);
-                        
+                    for vizinho in vizinhos.iter() {
+                        let distancia =
+                            self.distancia_entre_pontos(vizinho.0, vizinho.1, destino.0, destino.1);
+                        if distancia < distancia_mais_proxima {
+                            distancia_mais_proxima = distancia;
+                            vizinho_decente = Some(*vizinho);
+                        }
                     }
+
+                    vizinhos.retain(|&x| x != vizinho_decente.unwrap());
+                    vizinhos.retain(|&x| !caminho_escolhido.contains(&x));
+                    ja_fui.retain(|&x| !vizinhos.contains(&x));
+                    continue;
+                } else {
+                    self.fim_de_jogo(mapa, caminho_escolhido);
+                    println!("Não encontrei caminho válido!");
+                    break;
                 }
-
-                vizinhos.retain(|&x| x != vizinho_decente.unwrap());
-                vizinhos.retain(|&x| !caminho_escolhido.contains(&x));
-                ja_fui.retain(|&x| !vizinhos.contains(&x));
-
-
-                continue;
             }
 
             if self.carteiro.pos_x == self.caixa.pos_x && self.carteiro.pos_y == self.caixa.pos_y {
@@ -137,11 +136,10 @@ impl Jogo {
                 }
                 None => {
                     self.fim_de_jogo(mapa, caminho_escolhido);
+                    println!("Não encontrei caminho válido!");
                     break;
                 }
             }
-
-            
         }
     }
 
@@ -194,23 +192,20 @@ impl Jogo {
         }
 
         let posicoes_diagonal = vec![
-            (pos_x - 1, pos_y-1), // diagonal superior esquerda
-            (pos_x - 1, pos_y+1), //diagonal superior direita
+            (pos_x - 1, pos_y - 1), // diagonal superior esquerda
+            (pos_x - 1, pos_y + 1), //diagonal superior direita
             (pos_x + 1, pos_y - 1), //diagonal inferior esquerda
-            (pos_x +1, pos_y + 1), //diagonal inferior direita
+            (pos_x + 1, pos_y + 1), //diagonal inferior direita
         ];
-
 
         for posicao in posicoes_diagonal {
             let (x, y) = posicao;
             if x >= 0 && y >= 0 && (x as usize) < mapa.len() && (y as usize) < mapa[0].len() {
                 if mapa[x as usize][y as usize] == '-' {
-                    interacao_obstaculo = true;   
+                    interacao_obstaculo = true;
                 }
             }
         }
-
-
 
         (vizinhos_validos, interacao_obstaculo)
     }
@@ -228,11 +223,11 @@ impl Jogo {
             process::exit(1);
         }
 
-        let (mut pos_x, mut pos_y): (i32, i32) = (0, 0);
+        let (mut _pos_x, mut _pos_y): (i32, i32) = (0, 0);
         match posicao_final {
             Some(val) => {
-                pos_x = val.0 as i32;
-                pos_y = val.1 as i32;
+                _pos_x = val.0 as i32;
+                _pos_y = val.1 as i32;
             }
             None => {
                 println!("Não foi possível identificar a posição final! \n Saindo...");
@@ -240,7 +235,7 @@ impl Jogo {
             }
         }
 
-        self.joga(pos_x, pos_y, mapa);
+        self.joga(_pos_x, _pos_y, mapa);
 
         // aqui os dois foram configurado
     }
@@ -257,11 +252,21 @@ impl Jogo {
                     cor_mapa
                 };
 
-                execute!(std::io::stdout(), SetForegroundColor(cor),);
+                match execute!(std::io::stdout(), SetForegroundColor(cor)) {
+                    Err(e) =>{
+                        println!("Erro ao pintar o mapa: {}",e);
+                    }
+                    _ =>{}
+                }
 
                 print!("{}", coluna);
 
-                execute!(std::io::stdout(), SetForegroundColor(Color::Reset),);
+                match execute!(std::io::stdout(), SetForegroundColor(Color::Reset)){
+                    Err(e) =>{
+                        println!("Erro ao pintar o mapa: {}",e);
+                    }
+                    _ =>{}
+                }
             }
 
             println!();
