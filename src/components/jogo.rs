@@ -110,7 +110,7 @@ impl Jogo {
                 ja_fui.clear();
             }
 
-            if self.carteiro.pos_x == pos_x && self.carteiro.pos_y == pos_y {
+            if self.carteiro.pos_x == pos_x && self.carteiro.pos_y == pos_y && self.carteiro.status == StatusCar::JogandoComCaixa {
                 self.carteiro.set_status(StatusCar::Fim);
             }
 
@@ -140,7 +140,12 @@ impl Jogo {
                     break;
                 }
             }
+        
+            println!("Pos: {:?}", vizinho_decente);
+            self.esperar_enter(); 
+        
         }
+
     }
 
     fn diferenca_de_vetores(

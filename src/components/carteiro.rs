@@ -1,3 +1,4 @@
+#[derive(PartialEq)]
 pub enum StatusCar {
     Menu, //Significa que não foi identificado ainda a posição do carteiro no mapa, então [0][0] é a posição nula definida
     JogandoSemCaixa, //Significa que a posição de interesse para o carteiro é a mesma da Caixa.
