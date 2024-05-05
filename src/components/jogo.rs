@@ -56,12 +56,10 @@ impl Jogo {
             let mut vizinho_decente = None;
 
             voltas = if interacao_obstaculo {
-                // println!("Contato com obstáculo: {}", voltas + 1);
+
                 voltas + 1
             } else {
-                // println!("Vezes longe de um obstáculo: {}", revoltas + 1);
-                // revoltas += 1;
-                // voltas
+
                 0
             };
 
@@ -80,44 +78,6 @@ impl Jogo {
             println!("Escolhido: {:?}", vizinho_decente);
             println!("------------------");
 
-
-            // if vizinho_decente == None {
-                
-            //     if let Some((x_convert, y_convert)) =
-            //             caminho_escolhido.get(caminho_escolhido.len() - (voltas+revoltas))
-            //         {
-            //             println!("Contato: {}  Sem contato: {}", voltas, revoltas);
-            //             println!("Posição de ultima: {:?}",caminho_escolhido[caminho_escolhido.len() - (voltas+revoltas-1)]);
-            //             self.carteiro
-            //                 .set_posicao(Some((*x_convert as usize, *y_convert as usize)));
-            //             let (mut vizinhos, _interacao_obstaculo) =
-            //                 self.receber_vizinhos(mapa, self.carteiro.pos_x, self.carteiro.pos_y);
-    
-            //             let mut distancia_mais_proxima = f64::INFINITY;
-            //             let mut vizinho_decente = None;
-    
-            //             for vizinho in vizinhos.iter() {
-            //                 let distancia =
-            //                     self.distancia_entre_pontos(vizinho.0, vizinho.1, destino.0, destino.1);
-            //                 if distancia < distancia_mais_proxima {
-            //                     distancia_mais_proxima = distancia;
-            //                     vizinho_decente = Some(*vizinho);
-            //                 }
-            //             }
-    
-            //             vizinhos.retain(|&x| x != vizinho_decente.unwrap());
-            //             vizinhos.retain(|&x| !caminho_escolhido.contains(&x));
-            //             ja_fui.retain(|&x| !vizinhos.contains(&x));
-            //             revoltas = 0;
-            //             voltas = 0;
-            //             continue;
-            //         } else {
-            //             self.fim_de_jogo(mapa, caminho_escolhido);
-            //             println!("Não encontrei caminho válido!");
-            //             break;
-            //         }
-
-            // }
 
             ja_fui.extend(vizinhos.clone());
 
