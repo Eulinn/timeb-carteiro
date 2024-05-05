@@ -56,6 +56,8 @@ impl Jogo {
 
             voltas = if interacao_obstaculo { voltas + 1 } else { 0 };
 
+
+            println!("------------------");
             for vizinho in vizinhos.iter() {
                 let distancia =
                     self.distancia_entre_pontos(vizinho.0, vizinho.1, destino.0, destino.1);
@@ -63,7 +65,11 @@ impl Jogo {
                     distancia_mais_proxima = distancia;
                     vizinho_decente = Some(*vizinho);
                 }
+                println!("Casa: {:?} distancia: {}",vizinho, distancia);
             }
+            println!("Escolhido: {:?}",vizinho_decente);
+            println!("------------------");
+
 
             ja_fui.extend(vizinhos.clone());
 
@@ -105,14 +111,7 @@ impl Jogo {
                 }
             }
 
-            if self.carteiro.pos_x == self.caixa.pos_x && self.carteiro.pos_y == self.caixa.pos_y {
-                self.carteiro.set_status(StatusCar::JogandoComCaixa);
-                ja_fui.clear();
-            }
-
-            if self.carteiro.pos_x == pos_x && self.carteiro.pos_y == pos_y && self.carteiro.status == StatusCar::JogandoComCaixa {
-                self.carteiro.set_status(StatusCar::Fim);
-            }
+            
 
             match caminho_escolhido.len() {
                 0 => {}
@@ -140,8 +139,19 @@ impl Jogo {
                     break;
                 }
             }
+
+
+            if self.carteiro.pos_x == self.caixa.pos_x && self.carteiro.pos_y == self.caixa.pos_y {
+                self.carteiro.set_status(StatusCar::JogandoComCaixa);
+                ja_fui.clear();
+                println!("Limpou");
+            }
+
+            if self.carteiro.pos_x == pos_x && self.carteiro.pos_y == pos_y && self.carteiro.status == StatusCar::JogandoComCaixa {
+                self.carteiro.set_status(StatusCar::Fim);
+            }
         
-            println!("Pos: {:?}", vizinho_decente);
+            // println!("Pos: {:?}", vizinho_decente);
             self.esperar_enter(); 
         
         }
