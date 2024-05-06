@@ -29,7 +29,7 @@ impl Jogo {
         //Definir status do carteiro e da caixa
         self.carteiro.set_status(StatusCar::JogandoSemCaixa);
 
-        //implemento o A*
+        //implemento uma tentativa de A* 
 
         let mut ja_fui: Vec<(i32, i32)> = vec![(self.carteiro.pos_x, self.carteiro.pos_y)];
         let mut caminho_escolhido: Vec<(i32, i32)> = vec![(self.carteiro.pos_x, self.carteiro.pos_y)];
