@@ -34,7 +34,6 @@ impl Jogo {
         let mut ja_fui: Vec<(i32, i32)> = vec![(self.carteiro.pos_x, self.carteiro.pos_y)];
         let mut caminho_escolhido: Vec<(i32, i32)> = vec![(self.carteiro.pos_x, self.carteiro.pos_y)];
         let mut voltas = 0;
-        let mut revoltas = 0;
 
         loop {
             let destino = match self.carteiro.status {
@@ -110,8 +109,6 @@ impl Jogo {
                     vizinhos.retain(|&x| x != vizinho_decente.unwrap());
                     vizinhos.retain(|&x| !caminho_escolhido.contains(&x));
                     ja_fui.retain(|&x| !vizinhos.contains(&x));
-                    revoltas = 0;
-                    voltas = 0;
                     continue;
                 } else {
                     self.fim_de_jogo(mapa, caminho_escolhido);
