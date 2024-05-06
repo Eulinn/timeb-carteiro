@@ -65,7 +65,6 @@ impl Jogo {
 
             
 
-            println!("------------------");
             for vizinho in vizinhos.iter() {
                 let distancia =
                     self.distancia_entre_pontos(vizinho.0, vizinho.1, destino.0, destino.1);
@@ -73,10 +72,7 @@ impl Jogo {
                     distancia_mais_proxima = distancia;
                     vizinho_decente = Some(*vizinho);
                 }
-                println!("Casa: {:?} distancia: {}", vizinho, distancia);
             }
-            println!("Escolhido: {:?}", vizinho_decente);
-            println!("------------------");
 
 
             ja_fui.extend(vizinhos.clone());
@@ -164,7 +160,7 @@ impl Jogo {
             }
 
             // println!("Pos: {:?}", vizinho_decente);
-            self.esperar_enter();
+            // self.esperar_enter();
         }
     }
 
